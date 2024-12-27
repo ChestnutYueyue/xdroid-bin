@@ -29,25 +29,54 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ChestnutYueyue/xdroid-b
 noextract=("${pkgname}-${pkgver}.tar.gz")
 md5sums=('55c6a49f1df84b12772a0a77a251aeab')
 #validpgpkeys=()
-
+version_compare() {
+    local v1=$1
+    local v2=$2
+    local IFS=.
+    local i ver1=($v1) ver2=($v2)
+    # 比较每个部分的大小
+    for ((i = 0; i < ${#ver1[@]} && i < ${#ver2[@]}; i++)); do
+        if [[ -z ${ver2[i]} ]]; then
+            echo "1"
+            return
+        elif [[ -z ${ver1[i]} ]]; then
+            echo "2"
+            return
+        elif (( 10#${ver1[i]} > 10#${ver2[i]} )); then
+            echo "1"
+            return
+        elif (( 10#${ver1[i]} < 10#${ver2[i]} )); then
+            echo "2"
+            return
+        fi
+    done
+    if (( ${#ver1[@]} > ${#ver2[@]} )); then
+        echo "1"
+    elif (( ${#ver1[@]} < ${#ver2[@]} )); then
+        echo "2"
+    else
+        echo "0"
+    fi
+}
 package() {
-    # 检测系统内核版本如果大于4.5小于等于6.7则提示用户可以安装，如果大于6.7则提示用户可以降级内核.否则安装lts内核.
-    if (( $(bc -l <<< "$(uname -r) > 4.5 && $(uname -r) <= 6.7") )); then
-        echo "您的系统内核版本为：$(uname -r) ，符合安装条件。"
-        
-    elif (( $(bc -l <<< "$(uname -r) > 6.7") )); then
-        echo "您的系统内核版本为：$(uname -r)，建议您安装LTS内核版本。"
+    # 获取内核版本号
+    # kernel_version_part=$(uname -r | cut -d- -f1 | cut -d. -f1-2 )
+    kernel_version_part=$(uname -r | cut -d- -f1)
+    # 比较内核版本  内核版本大于等于 4.5.0 i且内核版本小于 6.7.0 
+    if [[ $(version_compare "$kernel_version_part" "4.5.0") == "1" && $(version_compare "$kernel_version_part" "6.7.0") == "2" ]]; then
+        echo "您的系统内核版本为：$kernel_version_part ，符合安装条件。"
+    else
+        echo "您的系统内核版本为：$kernel_version_part"
         read -r -p "是否安装LTS内核版本?[Y/n]" answer
         if [ "$answer" == "y" ]; then
             echo "正在安装 LTS内核版本..."
             sudo pacman -S linux-lts linux-lts-headers
             sudo grub-mkconfig -o /boot/grub/grub.cfg
             echo "LTS内核版本安装完成，请重新运行脚本。"
-            exit 0
+            exit 1
         fi
-    else
-        echo "您的系统内核版本为：$(uname -r) ,不符合安装条件。"
     fi
+  
     # 安装 xdroid-bin 包
     install -dm0755 "${pkgdir}/opt/${pkgname}" \
                     "${pkgdir}/usr/bin" \
