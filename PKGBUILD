@@ -1,7 +1,7 @@
 # Maintainer: taotieren <admin@taotieren.com>
 # Contributor: little_sheepycn <little_sheepycn@redstonebuild.onmicrosoft.com>
 
-pkgname=xdroid-bin
+pkgname=xdroid
 pkgver=13.1.333
 pkgrel=1
 epoch=
@@ -42,6 +42,8 @@ package() {
             echo "正在安装 LTS内核版本..."
             sudo pacman -S linux-lts linux-lts-headers
             sudo grub-mkconfig -o /boot/grub/grub.cfg
+            echo "LTS内核版本安装完成，请重新运行脚本。"
+            exit 0
         fi
     else
         echo "您的系统内核版本为：$(uname -r) ,不符合安装条件。"
