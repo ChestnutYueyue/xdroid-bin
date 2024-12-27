@@ -72,7 +72,7 @@ package() {
             echo "正在安装 LTS内核版本..."
             sudo pacman -S linux-lts linux-lts-headers
             sudo grub-mkconfig -o /boot/grub/grub.cfg
-            echo "LTS内核版本安装完成，请重新运行脚本。"
+            echo "LTS内核版本安装完成 请重启后 重新运行脚本。"
             exit 1
         fi
     fi
