@@ -2,7 +2,7 @@
 # Contributor: little_sheepycn <little_sheepycn@redstonebuild.onmicrosoft.com>
 
 pkgname=xdroid-bin
-pkgver=13.1.263
+pkgver=13.1.333
 pkgrel=1
 epoch=
 pkgdesc="卓懿,让安卓应用融入Linux平台应用生态体系，卓懿 x86_64 版（个人免费下载使用，不得用于商业用途）。"
@@ -24,9 +24,9 @@ backup=()
 options=('!strip')
 install=
 changelog=
-_date=20240328
-source=("${pkgname}-${pkgver}.tar.gz::https://zhuolin-my.sharepoint.cn/personal/shiyang_zhuolin_partner_onmschina_cn/Documents/卓懿/xDroidInstall-${arch[@]}-v${pkgver}-${_date}.run.tar.gz?ga=1")
-# https://zhuolin-my.sharepoint.cn/personal/shiyang_zhuolin_partner_onmschina_cn/Documents/卓懿/xDroidInstall-x86_64-v13.1.263-20240328.run.tar.gz?ga=1
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ChestnutYueyue/xdroid-bin/releases/download/v13.1.333/xDroidInstall-${arch[@]}-v${pkgver}.tar.gz")
+
+# https://github.com/ChestnutYueyue/xdroid-bin/releases/download/v13.1.333/xDroidInstall-x86_64-v13.1.333.tar.gz
 noextract=("${pkgname}-${pkgver}.tar.gz")
 md5sums=('7c11d4ebc0d59d1c3eb05353102a0a61')
 #validpgpkeys=()
@@ -50,7 +50,7 @@ EOF
     install -Dm0755 /dev/stdin "${pkgdir}/usr/bin/xDroidInstall" << EOF
 #!/bin/env bash
 export LD_LIBRARY_PATH="/opt/${pkgname}:\$LD_LIBRARY_PATH"
-exec /opt/${pkgname}/xDroidInstall-${arch[@]}-v${pkgver}-${_date}.run "\$@"
+exec /opt/${pkgname}/xDroidInstall-${arch[@]}-v${pkgver}.run "\$@"
 EOF
     install -Dm0644 /dev/stdin  "${pkgdir}/usr/share/applications/xDroidInstall.desktop" << EOF
 [Desktop Entry]
